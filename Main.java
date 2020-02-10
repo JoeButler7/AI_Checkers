@@ -4,6 +4,8 @@ import java.util.Scanner;
 public class Main {
 
     public static Board make_MoveHuman(String move, Board curr) {
+        move=move.toLowerCase();
+
         if (move.contains("-") && move.contains("x")) {
             System.out.println("Invalid move sequence, please re-enter move");
             return null;
@@ -23,8 +25,13 @@ public class Main {
 
             Coord start = new Coord(src2, src1);
             Coord result = new Coord(dst2, dst1);
-            Move m = new Move(start, result, null);
+            Move m = new Move(start, result, null,0);
             Board newb = curr.getBoardFromMove(m);
+            if(!m.isLegal(curr)){
+                System.out.print("ILLEGAL MOVE\nPLEASE ENTER A LEGAL MOVE \n");
+                return null;
+            }
+
             newb.update();
             return newb;
         }
@@ -50,7 +57,11 @@ public class Main {
             }
             Coord start = new Coord(src2, src1);
             Coord result = new Coord(dst2, dst1);
-            Move m = new Move(start, result, caps);
+            Move m = new Move(start, result, caps, caps.size());
+            if(!m.isLegal(curr)) {
+                System.out.print("ILLEGAL MOVE\nPLEASE ENTER A LEGAL MOVE \n");
+                return null;
+            }
             Board newb = curr.getBoardFromMove(m);
             newb.update();
             return newb;
@@ -61,18 +72,28 @@ public class Main {
 
     public static void main (String[] args) {
         Scanner scan=new Scanner(System.in);
-        Board b=new Board(4);
+        Board b=new Board(8);
         b.printBoard();
         AI agent=new AI();
+        Utility u=new Utility();
 
         while (!b.isTerm()){
             if(b.isTurn()){
                 Board temp=make_MoveHuman(scan.nextLine(),b );
+                while (temp==null){
+                    temp=make_MoveHuman(scan.nextLine(),b );
+                    b.printBoard();
+                }
                 b=temp;
             }
             else
-                b=agent.miniMax_Base(b);
+                b=agent.ABH(b);
             b.printBoard();
+            System.out.println("Moves: "+b.getMoveCount());
         }
+        if(u.getUtil(b)==1)
+            System.out.print("WHITE WINS");
+        else if(u.getUtil(b)==-1)
+            System.out.print("BLACK WINS");
     }
 }

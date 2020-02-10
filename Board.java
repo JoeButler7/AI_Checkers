@@ -18,6 +18,34 @@ public class Board implements State{
             this.white.add(new Piece(Color.White,new Coord(0,3),false));
             this.white.add(new Piece(Color.White,new Coord(2,3),false));
         }
+        else if(size==8){
+            this.black.add(new Piece(Color.Black,new Coord(1,0),false));
+            this.black.add(new Piece(Color.Black,new Coord(3,0),false));
+            this.black.add(new Piece(Color.Black,new Coord(5,0),false));
+            this.black.add(new Piece(Color.Black,new Coord(7,0),false));
+            this.black.add(new Piece(Color.Black,new Coord(0,1),false));
+            this.black.add(new Piece(Color.Black,new Coord(2,1),false));
+            this.black.add(new Piece(Color.Black,new Coord(4,1),false));
+            this.black.add(new Piece(Color.Black,new Coord(6,1),false));
+            this.black.add(new Piece(Color.Black,new Coord(1,2),false));
+            this.black.add(new Piece(Color.Black,new Coord(3,2),false));
+            this.black.add(new Piece(Color.Black,new Coord(5,2),false));
+            this.black.add(new Piece(Color.Black,new Coord(7,2),false));
+
+            this.white.add(new Piece(Color.White,new Coord(0,7),false));
+            this.white.add(new Piece(Color.White,new Coord(2,7),false));
+            this.white.add(new Piece(Color.White,new Coord(4,7),false));
+            this.white.add(new Piece(Color.White,new Coord(6,7),false));
+            this.white.add(new Piece(Color.White,new Coord(1,6),false));
+            this.white.add(new Piece(Color.White,new Coord(3,6),false));
+            this.white.add(new Piece(Color.White,new Coord(5,6),false));
+            this.white.add(new Piece(Color.White,new Coord(7,6),false));
+            this.white.add(new Piece(Color.White,new Coord(0,5),false));
+            this.white.add(new Piece(Color.White,new Coord(2,5),false));
+            this.white.add(new Piece(Color.White,new Coord(4,5),false));
+            this.white.add(new Piece(Color.White,new Coord(6,5),false));
+
+        }
         this.turn=true;
         this.moveCount=0;
         this.utility=0;
@@ -40,7 +68,6 @@ public class Board implements State{
         }
         return ret;
     }
-
     public ArrayList<Move> getMoves(){
         ArrayList<Move> ret=new ArrayList<Move>();
         if(turn) {
@@ -55,6 +82,17 @@ public class Board implements State{
                 ret.addAll(getCapFromPos(p, new ArrayList<Coord>()));
             }
         }
+
+        int max_Caps=0;
+        for(Move m: ret){
+           if(m.getCaps()>max_Caps){
+               max_Caps=m.getCaps();
+           }
+        }
+        for(int i=0;i<ret.size();i++){
+           if(ret.get(i).getCaps()<max_Caps)
+               ret.remove(i);
+        }
         return ret;
     }
     public ArrayList<Move> getMovesFromPos(Piece p){
@@ -66,24 +104,24 @@ public class Board implements State{
             //gets white moves
             if(x+1<size&&y-1>=0){
                 if(board[x+1][y-1].getColor()==Color.empty){
-                    ret.add(new Move(new Coord(x,y), new Coord(x+1,y-1),null));
+                    ret.add(new Move(new Coord(x,y), new Coord(x+1,y-1),null,0));
                 }
             }
             if(x-1>=0&&y-1>=0){
                 if(board[x-1][y-1].getColor()==Color.empty){
-                    ret.add(new Move(new Coord(x,y), new Coord(x-1,y-1),null));
+                    ret.add(new Move(new Coord(x,y), new Coord(x-1,y-1),null,0));
                 }
             }
         }
         if(p.getColor()==Color.WhiteKing){
             if(x+1<size&&y+1<size){
                 if(board[x+1][y+1].getColor()==Color.empty){
-                    ret.add(new Move(new Coord(x,y), new Coord(x+1,y+1),null));
+                    ret.add(new Move(new Coord(x,y), new Coord(x+1,y+1),null,0));
                 }
             }
             if(x-1>=0&&y+1<size){
                 if(board[x-1][y+1].getColor()==Color.empty){
-                    ret.add(new Move(new Coord(x,y), new Coord(x-1,y+1),null));
+                    ret.add(new Move(new Coord(x,y), new Coord(x-1,y+1),null,0));
                 }
             }
         }
@@ -92,27 +130,28 @@ public class Board implements State{
             //gets black moves
             if(x+1<size&&y+1<size){
                 if(board[x+1][y+1].getColor()==Color.empty){
-                    ret.add(new Move(new Coord(x,y), new Coord(x+1,y+1),null));
+                    ret.add(new Move(new Coord(x,y), new Coord(x+1,y+1),null,0));
                 }
             }
             if(x-1>=0&&y+1<size){
                 if(board[x-1][y+1].getColor()==Color.empty){
-                    ret.add(new Move(new Coord(x,y), new Coord(x-1,y+1),null));
+                    ret.add(new Move(new Coord(x,y), new Coord(x-1,y+1),null,0));
                 }
             }
         }
         if(p.getColor()==Color.BlackKing){
             if(x+1<size&&y-1>=0){
                 if(board[x+1][y-1].getColor()==Color.empty){
-                    ret.add(new Move(new Coord(x,y), new Coord(x+1,y-1),null));
+                    ret.add(new Move(new Coord(x,y), new Coord(x+1,y-1),null,0));
                 }
             }
             if(x-1>=0&&y-1>=0){
                 if(board[x-1][y-1].getColor()==Color.empty){
-                    ret.add(new Move(new Coord(x,y), new Coord(x-1,y-1),null));
+                    ret.add(new Move(new Coord(x,y), new Coord(x-1,y-1),null,0));
                 }
             }
         }
+
         return ret;
     }
     public ArrayList<Move> getCapFromPos(Piece p, ArrayList<Coord> Cap){
@@ -121,63 +160,67 @@ public class Board implements State{
         int x=p.getPos().getColumn();
         int y=p.getPos().getRow();
         int size=board.length;
-        if(p.getColor()==Color.White||p.getColor()==Color.WhiteKing){
-            if(x+2<size&&y-2>=0){
-                if(board[x+2][y-2].getColor()==Color.empty){
-                    if(board[x+1][y-1].getColor()==Color.BlackKing||board[x+1][y-1].getColor()==Color.Black){
-                        tempCap.add(new Coord(x+1,y-1));
-                        ret.add(new Move(new Coord(x,y),new Coord(x+2,y-2),tempCap));
+        if(p.getColor()==Color.White||p.getColor()==Color.WhiteKing) {
+            if (x + 2 < size && y - 2 >= 0) {
+                if (board[x + 2][y - 2].getColor() == Color.empty) {
+                    if (board[x + 1][y - 1].getColor() == Color.BlackKing || board[x + 1][y - 1].getColor() == Color.Black) {
+                        tempCap.add(new Coord(x + 1, y - 1));
+                        ret.add(new Move(new Coord(x, y), new Coord(x + 2, y - 2), tempCap, tempCap.size()));
                     }
                 }
             }
-            if((x-2)>=0&&(y-2)>=0){
-                if(board[x-2][y-2].getColor()==Color.empty){
-                    if(board[x-1][y-1].getColor()==Color.BlackKing||board[x-1][y-1].getColor()==Color.Black){
-                        tempCap.add(new Coord(x-1,y-1));
-                        ret.add(new Move(new Coord(x,y),new Coord(x-2,y-2),tempCap));
+            if ((x - 2) >= 0 && (y - 2) >= 0) {
+                if (board[x - 2][y - 2].getColor() == Color.empty) {
+                    if (board[x - 1][y - 1].getColor() == Color.BlackKing || board[x - 1][y - 1].getColor() == Color.Black) {
+                        tempCap.add(new Coord(x - 1, y - 1));
+                        ret.add(new Move(new Coord(x, y), new Coord(x - 2, y - 2), tempCap,tempCap.size()));
                     }
                 }
             }
-            if(x+2<size&&y+2<size){
-                if(board[x+2][y+2].getColor()==Color.empty){
-                    if(board[x+1][y+1].getColor()==Color.BlackKing||board[x+1][y+1].getColor()==Color.Black){
-                        tempCap.add(new Coord(x+1,y+1));
-                        ret.add(new Move(new Coord(x,y),new Coord(x+2,y+2),tempCap));
+        }
+        if(p.getColor()==Color.WhiteKing) {
+            if (x + 2 < size && y + 2 < size) {
+                if (board[x + 2][y + 2].getColor() == Color.empty) {
+                    if (board[x + 1][y + 1].getColor() == Color.BlackKing || board[x + 1][y + 1].getColor() == Color.Black) {
+                        tempCap.add(new Coord(x + 1, y + 1));
+                        ret.add(new Move(new Coord(x, y), new Coord(x + 2, y + 2), tempCap,tempCap.size()));
                     }
                 }
             }
-            if(x-2>=0&&y+2<size){
-                if(board[x-2][y+2].getColor()==Color.empty){
-                    if(board[x-1][y+1].getColor()==Color.BlackKing||board[x-1][y+1].getColor()==Color.Black){
-                        tempCap.add(new Coord(x-1,y+1));
-                        ret.add(new Move(new Coord(x,y),new Coord(x-2,y+2),tempCap));
+            if (x - 2 >= 0 && y + 2 < size) {
+                if (board[x - 2][y + 2].getColor() == Color.empty) {
+                    if (board[x - 1][y + 1].getColor() == Color.BlackKing || board[x - 1][y + 1].getColor() == Color.Black) {
+                        tempCap.add(new Coord(x - 1, y + 1));
+                        ret.add(new Move(new Coord(x, y), new Coord(x - 2, y + 2), tempCap,tempCap.size()));
                     }
                 }
             }
         }
 
-        if(p.getColor()==Color.Black){
-            if(x+2<size&&y+2<size){
-                if(board[x+2][y+2].getColor()==Color.empty){
-                    if(board[x+1][y+1].getColor()==Color.WhiteKing||board[x+1][y+1].getColor()==Color.White){
-                        tempCap.add(new Coord(x+1,y+1));
-                        ret.add(new Move(new Coord(x,y),new Coord(x+2,y+2),tempCap));
+        if(p.getColor()==Color.Black||p.getColor()==Color.BlackKing) {
+            if (x + 2 < size && y + 2 < size) {
+                if (board[x + 2][y + 2].getColor() == Color.empty) {
+                    if (board[x + 1][y + 1].getColor() == Color.WhiteKing || board[x + 1][y + 1].getColor() == Color.White) {
+                        tempCap.add(new Coord(x + 1, y + 1));
+                        ret.add(new Move(new Coord(x, y), new Coord(x + 2, y + 2), tempCap,tempCap.size()));
                     }
                 }
             }
-            if(x-2>=0&&y+2<size){
-                if(board[x-2][y+2].getColor()==Color.empty){
-                    if(board[x-1][y+1].getColor()==Color.WhiteKing||board[x-1][y+1].getColor()==Color.White){
-                        tempCap.add(new Coord(x-1,y+1));
-                        ret.add(new Move(new Coord(x,y),new Coord(x-2,y+2),tempCap));
+            if (x - 2 >= 0 && y + 2 < size) {
+                if (board[x - 2][y + 2].getColor() == Color.empty) {
+                    if (board[x - 1][y + 1].getColor() == Color.WhiteKing || board[x - 1][y + 1].getColor() == Color.White) {
+                        tempCap.add(new Coord(x - 1, y + 1));
+                        ret.add(new Move(new Coord(x, y), new Coord(x - 2, y + 2), tempCap,tempCap.size()));
                     }
                 }
             }
+        }
+        if(p.getColor()==Color.BlackKing){
             if(x+2<size&&y-2>=0){
                 if(board[x+2][y-2].getColor()==Color.empty){
                     if(board[x+1][y-1].getColor()==Color.White||board[x+1][y-1].getColor()==Color.WhiteKing){
                         tempCap.add(new Coord(x+1,y-1));
-                        ret.add(new Move(new Coord(x,y),new Coord(x+2,y-2),tempCap));
+                        ret.add(new Move(new Coord(x,y),new Coord(x+2,y-2),tempCap,tempCap.size()));
                     }
                 }
             }
@@ -185,7 +228,7 @@ public class Board implements State{
                 if(board[x-2][y-2].getColor()==Color.empty){
                     if(board[x-1][y-1].getColor()==Color.WhiteKing||board[x-1][y-1].getColor()==Color.White){
                         tempCap.add(new Coord(x-1,y-1));
-                        ret.add(new Move(new Coord(x,y),new Coord(x-2,y-2),tempCap));
+                        ret.add(new Move(new Coord(x,y),new Coord(x-2,y-2),tempCap,tempCap.size()));
                     }
                 }
             }
@@ -244,7 +287,7 @@ public class Board implements State{
                     }
                 }
             }
-            ret=new Board(new Piece[board.length][board.length],btemp,wtemp,true,moveCount);
+            ret=new Board(new Piece[board.length][board.length],btemp,wtemp,true,moveCount+1);
             ret.update();
         }
         return ret;
@@ -266,7 +309,7 @@ public class Board implements State{
 
     @Override
     public boolean isTerm() {
-        if(black.isEmpty()||white.isEmpty())
+        if(black.isEmpty()||white.isEmpty()||this.getChildren().isEmpty())
             return true;
         if(moveCount==10)
             return true;

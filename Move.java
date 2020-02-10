@@ -4,27 +4,30 @@ public class Move implements Actions {
     private Coord start;
     private Coord Result;
     private ArrayList<Coord> capList;
+    private int caps;
 
-    public Move(Coord start, Coord result, ArrayList<Coord> capList) {
+    public Move(Coord start, Coord result, ArrayList<Coord> capList, int caps) {
         this.start = start;
         Result = result;
         this.capList = capList;
+        this.caps=caps;
     }
 
     @Override
     public boolean isLegal(Board b) {
-        if(capList.isEmpty()){
-            if(Math.abs(start.getRow()-Result.getRow())!=1)
-                return false;
-            if(Math.abs(start.getColumn()-Result.getColumn())!=1)
-                return false;
-            if(b.getBoard()[Result.getColumn()][Result.getRow()].getColor()!=Color.empty)
-                return false;
-            return true;
-        }
-        return true;
+            Board temp=b.getBoardFromMove(this);
+            return arrListContains(temp, b.getChildren());
     }
 
+    private boolean arrListContains(Board b, ArrayList<Board> boards){
+        for(Board temp: boards){
+            if(b.equals(temp))
+                return true;
+        }
+        return false;
+    }
+
+    //getters and setter
     public Coord getStart() {
         return start;
     }
@@ -47,5 +50,13 @@ public class Move implements Actions {
 
     public void setCapList(ArrayList<Coord> capList) {
         this.capList = capList;
+    }
+
+    public int getCaps() {
+        return caps;
+    }
+
+    public void setCaps(int caps) {
+        this.caps = caps;
     }
 }

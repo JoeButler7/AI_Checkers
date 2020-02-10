@@ -121,7 +121,7 @@ public class Board implements State{
         int x=p.getPos().getColumn();
         int y=p.getPos().getRow();
         int size=board.length;
-        if(p.getColor()==Color.White){
+        if(p.getColor()==Color.White||p.getColor()==Color.WhiteKing){
             if(x+2<size&&y-2>=0){
                 if(board[x+2][y-2].getColor()==Color.empty){
                     if(board[x+1][y-1].getColor()==Color.BlackKing||board[x+1][y-1].getColor()==Color.Black){
@@ -135,6 +135,22 @@ public class Board implements State{
                     if(board[x-1][y-1].getColor()==Color.BlackKing||board[x-1][y-1].getColor()==Color.Black){
                         tempCap.add(new Coord(x-1,y-1));
                         ret.add(new Move(new Coord(x,y),new Coord(x-2,y-2),tempCap));
+                    }
+                }
+            }
+            if(x+2<size&&y+2<size){
+                if(board[x+2][y+2].getColor()==Color.empty){
+                    if(board[x+1][y+1].getColor()==Color.BlackKing||board[x+1][y+1].getColor()==Color.Black){
+                        tempCap.add(new Coord(x+1,y+1));
+                        ret.add(new Move(new Coord(x,y),new Coord(x+2,y+2),tempCap));
+                    }
+                }
+            }
+            if(x-2>=0&&y+2<size){
+                if(board[x-2][y+2].getColor()==Color.empty){
+                    if(board[x-1][y+1].getColor()==Color.BlackKing||board[x-1][y+1].getColor()==Color.Black){
+                        tempCap.add(new Coord(x-1,y+1));
+                        ret.add(new Move(new Coord(x,y),new Coord(x-2,y+2),tempCap));
                     }
                 }
             }
@@ -154,6 +170,22 @@ public class Board implements State{
                     if(board[x-1][y+1].getColor()==Color.WhiteKing||board[x-1][y+1].getColor()==Color.White){
                         tempCap.add(new Coord(x-1,y+1));
                         ret.add(new Move(new Coord(x,y),new Coord(x-2,y+2),tempCap));
+                    }
+                }
+            }
+            if(x+2<size&&y-2>=0){
+                if(board[x+2][y-2].getColor()==Color.empty){
+                    if(board[x+1][y-1].getColor()==Color.White||board[x+1][y-1].getColor()==Color.WhiteKing){
+                        tempCap.add(new Coord(x+1,y-1));
+                        ret.add(new Move(new Coord(x,y),new Coord(x+2,y-2),tempCap));
+                    }
+                }
+            }
+            if((x-2)>=0&&(y-2)>=0){
+                if(board[x-2][y-2].getColor()==Color.empty){
+                    if(board[x-1][y-1].getColor()==Color.WhiteKing||board[x-1][y-1].getColor()==Color.White){
+                        tempCap.add(new Coord(x-1,y-1));
+                        ret.add(new Move(new Coord(x,y),new Coord(x-2,y-2),tempCap));
                     }
                 }
             }
@@ -219,6 +251,17 @@ public class Board implements State{
     }
 
 
+    public boolean equals(Board b){
+       for(int i=0;i<board.length;i++){
+           for(int j=0;j<board.length;j++){
+               if(board[i][j].getColor()!=b.getBoard()[i][j].getColor())
+                   return false;
+           }
+       }
+       return true;
+    }
+
+
 
 
     @Override
@@ -237,18 +280,19 @@ public class Board implements State{
             }
         }
         for(Piece p: white){
-//            if(p.getPos().getRow()==0){
-//                p.setColor(Color.WhiteKing);
-//            }
+            if(p.getPos().getRow()==0){
+                p.setColor(Color.WhiteKing);
+            }
             board[p.getPos().getColumn()][p.getPos().getRow()]=p;
         }
         for(Piece p: black){
-//            if(p.getPos().getRow()==3)
-//                p.setColor(Color.BlackKing);
+            if(p.getPos().getRow()==3)
+                p.setColor(Color.BlackKing);
             board[p.getPos().getColumn()][p.getPos().getRow()]=p;
         }
     }
     public void printBoard(){
+        System.out.print("  ");
         for (int i=0;i<board.length;i++){
             System.out.print((i+1)+" ");
         }

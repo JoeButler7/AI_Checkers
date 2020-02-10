@@ -27,7 +27,8 @@ public class Main {
             Board newb = curr.getBoardFromMove(m);
             newb.update();
             return newb;
-        } else if (move.contains("x")) {
+        }
+        else if (move.contains("x")) {
             String[] parts = move.split("x");
             String src = parts[0];
             String dst = parts[parts.length - 1];
@@ -45,10 +46,10 @@ public class Main {
                 temp = parts[i];
                 int cap0 = (int) temp.charAt(0) - 97;
                 int cap1 = (int) temp.charAt(1) - 49;
-                caps.add(new Coord(cap0, cap1));
+                caps.add(new Coord(cap1, cap0));
             }
-            Coord start = new Coord(src1, src2);
-            Coord result = new Coord(dst1, dst2);
+            Coord start = new Coord(src2, src1);
+            Coord result = new Coord(dst2, dst1);
             Move m = new Move(start, result, caps);
             Board newb = curr.getBoardFromMove(m);
             newb.update();

@@ -7,6 +7,14 @@ public class Utility implements Util {
         if(b.getWhite().size()==0){
             return -1;
         }
+        if(b.isTurn()){
+            if(b.getChildren().isEmpty())
+                return -1;
+        }
+        if(!b.isTurn()){
+            if(b.getChildren().isEmpty())
+                return 1;
+        }
         return 0;
     }
 }

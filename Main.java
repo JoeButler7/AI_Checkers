@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Main {
 
     public static Board make_MoveHuman(String move, Board curr) {
-        move=move.toLowerCase();
+        move = move.toLowerCase();
 
         if (move.contains("-") && move.contains("x")) {
             System.out.println("Invalid move sequence, please re-enter move");
@@ -25,17 +25,16 @@ public class Main {
 
             Coord start = new Coord(src2, src1);
             Coord result = new Coord(dst2, dst1);
-            Move m = new Move(start, result, null,0);
+            Move m = new Move(start, result, null, 0);
             Board newb = curr.getBoardFromMove(m);
-            if(!m.isLegal(curr)){
+            if (!m.isLegal(curr)) {
                 System.out.print("ILLEGAL MOVE\nPLEASE ENTER A LEGAL MOVE \n");
                 return null;
             }
 
             newb.update();
             return newb;
-        }
-        else if (move.contains("x")) {
+        } else if (move.contains("x")) {
             String[] parts = move.split("x");
             String src = parts[0];
             String dst = parts[parts.length - 1];
@@ -58,7 +57,7 @@ public class Main {
             Coord start = new Coord(src2, src1);
             Coord result = new Coord(dst2, dst1);
             Move m = new Move(start, result, caps, caps.size());
-            if(!m.isLegal(curr)) {
+            if (!m.isLegal(curr)) {
                 System.out.print("ILLEGAL MOVE\nPLEASE ENTER A LEGAL MOVE \n");
                 return null;
             }
@@ -70,30 +69,96 @@ public class Main {
     }
 
 
-    public static void main (String[] args) {
-        Scanner scan=new Scanner(System.in);
-        Board b=new Board(8);
-        b.printBoard();
-        AI agent=new AI();
-        Utility u=new Utility();
-
-        while (!b.isTerm()){
-            if(b.isTurn()){
-                Board temp=make_MoveHuman(scan.nextLine(),b );
-                while (temp==null){
-                    temp=make_MoveHuman(scan.nextLine(),b );
-                    b.printBoard();
-                }
-                b=temp;
-            }
-            else
-                b=agent.ABH(b);
-            b.printBoard();
-            System.out.println("Moves: "+b.getMoveCount());
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Enter 0 for a 4x4 board and 1 for an 8x8 board");
+        int size;
+        Board b;
+        while (true) {
+            size = scan.nextInt();
+            if (size == 0) {
+                b = new Board(4);
+                break;
+            } else if (size == 1) {
+                b = new Board(8);
+                break;
+            } else
+                System.out.println("Invalid input, please re-enter. 0 for 4x4 board, 1 for 8x8 board");
         }
-        if(u.getUtil(b)==1)
+        int player1 = -1;
+        int player2 = -1;
+        int input;
+        while (true) {
+            System.out.println("Select Player 1 (white): 0 for Human, 1 for Minimax, 2 for Minimax with Alpha-Beta Pruning, 3 for H-Minimax with " +
+                    "Alpha-Beta pruning \n(Note: Minimax and Minimax with Alpha-Beta will be slow on 8x8 board");
+            input = scan.nextInt();
+            if (input == 0 || input == 1 || input == 2 || input == 3) {
+                player1 = input;
+                break;
+            } else
+                System.out.println("Invalid input, please try again");
+        }
+        while (true) {
+            System.out.println("Select Player 2 (black): 0 for Human, 1 for Minimax, 2 for Minimax with Alpha-Beta Pruning, 3 for H-Minimax with " +
+                    "Alpha-Beta pruning \n(Note: Minimax and Minimax with Alpha-Beta will be slow on 8x8 board");
+            input = scan.nextInt();
+            if (input == 0 || input == 1 || input == 2 || input == 3) {
+                player2 = input;
+                break;
+            } else
+                System.out.println("Invalid input, please try again");
+        }
+        AI agent = new AI();
+        Utility u = new Utility();
+        while (!b.isTerm()) {
+            if (b.isTurn()) {
+                switch (player1) {
+                    case 0:
+                        Board temp = make_MoveHuman(scan.nextLine(), b);
+                        while (temp == null) {
+                            temp = make_MoveHuman(scan.nextLine(), b);
+                            b.printBoard();
+                        }
+                        b = temp;
+                        break;
+                    case 1:
+                        b = agent.miniMax_Base(b);
+                        break;
+                    case 2:
+                        b = agent.Alpha_Beta(b);
+                        break;
+                    case 3:
+                        b = agent.ABH(b);
+                }
+            } else {
+                switch (player2) {
+                    case 0:
+                        Board temp = make_MoveHuman(scan.nextLine(), b);
+                        while (temp == null) {
+                            temp = make_MoveHuman(scan.nextLine(), b);
+                            b.printBoard();
+                        }
+                        b = temp;
+                        break;
+                    case 1:
+                        b = agent.miniMax_Base(b);
+                        break;
+                    case 2:
+                        b = agent.Alpha_Beta(b);
+                        break;
+                    case 3:
+                        b = agent.ABH(b);
+                }
+
+                b.printBoard();
+                System.out.println("Moves Thus Far: " + b.getMoveCount());
+            }
+        }
+        if (u.getUtil(b) == 1)
             System.out.print("WHITE WINS");
-        else if(u.getUtil(b)==-1)
+        else if (u.getUtil(b) == -1)
             System.out.print("BLACK WINS");
+        else if(u.getUtil(b)==0)
+            System.out.println("IT'S A TIE");
     }
 }

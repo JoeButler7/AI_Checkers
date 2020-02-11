@@ -164,16 +164,22 @@ public class Board implements State{
             if (x + 2 < size && y - 2 >= 0) {
                 if (board[x + 2][y - 2].getColor() == Color.empty) {
                     if (board[x + 1][y - 1].getColor() == Color.BlackKing || board[x + 1][y - 1].getColor() == Color.Black) {
-                        tempCap.add(new Coord(x + 1, y - 1));
-                        ret.add(new Move(new Coord(x, y), new Coord(x + 2, y - 2), tempCap, tempCap.size()));
+                        if(!inCapList(new Coord(x+1,y-1),tempCap)) {
+                            tempCap.add(new Coord(x + 1, y - 1));
+                            ret.add(new Move(new Coord(x, y), new Coord(x + 2, y - 2), tempCap, tempCap.size()));
+                            ret.addAll(getCapFromPos(new Piece(p.getColor(),new Coord(x+2,y-2),p.isKing()),tempCap));
+                        }
                     }
                 }
             }
             if ((x - 2) >= 0 && (y - 2) >= 0) {
                 if (board[x - 2][y - 2].getColor() == Color.empty) {
                     if (board[x - 1][y - 1].getColor() == Color.BlackKing || board[x - 1][y - 1].getColor() == Color.Black) {
-                        tempCap.add(new Coord(x - 1, y - 1));
-                        ret.add(new Move(new Coord(x, y), new Coord(x - 2, y - 2), tempCap,tempCap.size()));
+                        if(!inCapList(new Coord(x-1,y-1),tempCap)) {
+                            tempCap.add(new Coord(x - 1, y - 1));
+                            ret.add(new Move(new Coord(x, y), new Coord(x - 2, y - 2), tempCap, tempCap.size()));
+                            ret.addAll(getCapFromPos(new Piece(p.getColor(),new Coord(x-2,y-2),p.isKing()),tempCap));
+                        }
                     }
                 }
             }
@@ -182,16 +188,22 @@ public class Board implements State{
             if (x + 2 < size && y + 2 < size) {
                 if (board[x + 2][y + 2].getColor() == Color.empty) {
                     if (board[x + 1][y + 1].getColor() == Color.BlackKing || board[x + 1][y + 1].getColor() == Color.Black) {
-                        tempCap.add(new Coord(x + 1, y + 1));
-                        ret.add(new Move(new Coord(x, y), new Coord(x + 2, y + 2), tempCap,tempCap.size()));
+                        if(!inCapList(new Coord(x+1,y+1),tempCap)) {
+                            tempCap.add(new Coord(x + 1, y + 1));
+                            ret.add(new Move(new Coord(x, y), new Coord(x + 2, y + 2), tempCap, tempCap.size()));
+                            ret.addAll(getCapFromPos(new Piece(p.getColor(),new Coord(x+2,y+2),p.isKing()),tempCap));
+                        }
                     }
                 }
             }
             if (x - 2 >= 0 && y + 2 < size) {
                 if (board[x - 2][y + 2].getColor() == Color.empty) {
                     if (board[x - 1][y + 1].getColor() == Color.BlackKing || board[x - 1][y + 1].getColor() == Color.Black) {
-                        tempCap.add(new Coord(x - 1, y + 1));
-                        ret.add(new Move(new Coord(x, y), new Coord(x - 2, y + 2), tempCap,tempCap.size()));
+                        if(!inCapList(new Coord(x-1,y+1),tempCap)) {
+                            tempCap.add(new Coord(x - 1, y + 1));
+                            ret.add(new Move(new Coord(x, y), new Coord(x - 2, y + 2), tempCap, tempCap.size()));
+                            ret.addAll(getCapFromPos(new Piece(p.getColor(),new Coord(x-2,y+2),p.isKing()),tempCap));
+                        }
                     }
                 }
             }
@@ -201,16 +213,22 @@ public class Board implements State{
             if (x + 2 < size && y + 2 < size) {
                 if (board[x + 2][y + 2].getColor() == Color.empty) {
                     if (board[x + 1][y + 1].getColor() == Color.WhiteKing || board[x + 1][y + 1].getColor() == Color.White) {
-                        tempCap.add(new Coord(x + 1, y + 1));
-                        ret.add(new Move(new Coord(x, y), new Coord(x + 2, y + 2), tempCap,tempCap.size()));
+                        if(!inCapList(new Coord(x+1,y+1),tempCap)) {
+                            tempCap.add(new Coord(x + 1, y + 1));
+                            ret.add(new Move(new Coord(x, y), new Coord(x + 2, y + 2), tempCap, tempCap.size()));
+                            ret.addAll(getCapFromPos(new Piece(p.getColor(),new Coord(x+2,y+2),p.isKing()),tempCap));
+                        }
                     }
                 }
             }
             if (x - 2 >= 0 && y + 2 < size) {
                 if (board[x - 2][y + 2].getColor() == Color.empty) {
                     if (board[x - 1][y + 1].getColor() == Color.WhiteKing || board[x - 1][y + 1].getColor() == Color.White) {
-                        tempCap.add(new Coord(x - 1, y + 1));
-                        ret.add(new Move(new Coord(x, y), new Coord(x - 2, y + 2), tempCap,tempCap.size()));
+                        if(!inCapList(new Coord(x-1,y+1),tempCap)) {
+                            tempCap.add(new Coord(x - 1, y + 1));
+                            ret.add(new Move(new Coord(x, y), new Coord(x - 2, y + 2), tempCap, tempCap.size()));
+                            ret.addAll(getCapFromPos(new Piece(p.getColor(),new Coord(x-2,y+2),p.isKing()),tempCap));
+                        }
                     }
                 }
             }
@@ -219,16 +237,22 @@ public class Board implements State{
             if(x+2<size&&y-2>=0){
                 if(board[x+2][y-2].getColor()==Color.empty){
                     if(board[x+1][y-1].getColor()==Color.White||board[x+1][y-1].getColor()==Color.WhiteKing){
-                        tempCap.add(new Coord(x+1,y-1));
-                        ret.add(new Move(new Coord(x,y),new Coord(x+2,y-2),tempCap,tempCap.size()));
+                        if(!inCapList(new Coord(x-1,y+1),tempCap)) {
+                            tempCap.add(new Coord(x + 1, y - 1));
+                            ret.add(new Move(new Coord(x, y), new Coord(x + 2, y - 2), tempCap, tempCap.size()));
+                            ret.addAll(getCapFromPos(new Piece(p.getColor(),new Coord(x+2,y-2),p.isKing()),tempCap));
+                        }
                     }
                 }
             }
             if((x-2)>=0&&(y-2)>=0){
                 if(board[x-2][y-2].getColor()==Color.empty){
                     if(board[x-1][y-1].getColor()==Color.WhiteKing||board[x-1][y-1].getColor()==Color.White){
-                        tempCap.add(new Coord(x-1,y-1));
-                        ret.add(new Move(new Coord(x,y),new Coord(x-2,y-2),tempCap,tempCap.size()));
+                        if(!inCapList(new Coord(x-1,y-1),tempCap)) {
+                            tempCap.add(new Coord(x - 1, y - 1));
+                            ret.add(new Move(new Coord(x, y), new Coord(x - 2, y - 2), tempCap, tempCap.size()));
+                            ret.addAll(getCapFromPos(new Piece(p.getColor(), new Coord(x - 2, y - 2), p.isKing()), tempCap));
+                        }
                     }
                 }
             }
@@ -292,8 +316,6 @@ public class Board implements State{
         }
         return ret;
     }
-
-
     public boolean equals(Board b){
        for(int i=0;i<board.length;i++){
            for(int j=0;j<board.length;j++){
@@ -303,15 +325,13 @@ public class Board implements State{
        }
        return true;
     }
-
-
-
-
     @Override
     public boolean isTerm() {
         if(black.isEmpty()||white.isEmpty()||this.getChildren().isEmpty())
             return true;
-        if(moveCount==10)
+        if(moveCount==10&&board.length==4)
+            return true;
+        if(board.length==8&&moveCount==100)
             return true;
         return false;
     }
@@ -329,8 +349,9 @@ public class Board implements State{
             board[p.getPos().getColumn()][p.getPos().getRow()]=p;
         }
         for(Piece p: black){
-            if(p.getPos().getRow()==3)
+            if(p.getPos().getRow()==board.length-1)
                 p.setColor(Color.BlackKing);
+
             board[p.getPos().getColumn()][p.getPos().getRow()]=p;
         }
     }
@@ -373,9 +394,13 @@ public class Board implements State{
             }
             System.out.print("\n");
         }
-        System.out.print("\n");
-        System.out.print("\n");
-        System.out.print("\n");
+    }
+    private boolean inCapList(Coord c, ArrayList<Coord> capList){
+        for(Coord coord: capList){
+            if(c.equals(coord))
+                return true;
+        }
+        return false;
     }
 
 

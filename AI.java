@@ -1,3 +1,4 @@
+import java.awt.desktop.SystemSleepEvent;
 import java.util.ArrayList;
 
 public class AI {
@@ -89,8 +90,9 @@ public class AI {
                 visited.add(b);
                 if (ret >= Beta)
                     return ret;
+                Alpha=Math.max(Alpha, ret);
             }
-            Alpha=Math.max(Alpha, ret);
+
         }
         return ret;
     }
@@ -106,9 +108,10 @@ public class AI {
                 visited.add(b);
                 if (ret <= Alpha)
                     return ret;
+                Beta=Math.min(Beta, ret);
             }
 
-            Beta=Math.min(Beta, ret);
+
         }
         return ret;
     }
@@ -120,12 +123,25 @@ public class AI {
         Alpha=Integer.MIN_VALUE;
         Beta=Integer.MAX_VALUE;
         visited.add(nextMove);
-        for (int i=1;i<successors.size();i++){
-            if(!visitedContains(visited,successors.get(i))){
-                visited.add(successors.get(i));
-                int min_val=AB_Min(successors.get(i), Alpha, Beta);
-                if(util.getUtil(nextMove)<min_val){
-                    nextMove=successors.get(i);
+        if(curr.isTurn()){
+            for (int i=1;i<successors.size();i++){
+                if(!visitedContains(visited,successors.get(i))){
+                    visited.add(successors.get(i));
+                    int max_val=ABH_Max(successors.get(i), Alpha, Beta);
+                    if(Heuristic(nextMove)>max_val){
+                        nextMove=successors.get(i);
+                    }
+                }
+            }
+        }
+        else {
+            for (int i = 1; i < successors.size(); i++) {
+                if (!visitedContains(visited, successors.get(i))) {
+                    visited.add(successors.get(i));
+                    int min_val = ABH_Min(successors.get(i), Alpha, Beta);
+                    if (Heuristic(nextMove) < min_val) {
+                        nextMove = successors.get(i);
+                    }
                 }
             }
         }
@@ -136,15 +152,15 @@ public class AI {
         if(curr.isTerm()){
             return util.getUtil(curr);
         }
-        else if(depth==5){
+        else if(depth==10){
             return Heuristic(curr);
         }
         int ret=Integer.MIN_VALUE;
         ArrayList<Board> moves=curr.getChildren();
+        depth++;
         for(Board b: moves){
             if(!visitedContains(visited,b)) {
                 ret = Math.min(ret, ABH_Min(b, Alpha, Beta));
-                depth++;
                 visited.add(b);
                 if (ret >= Beta)
                     return ret;
@@ -157,14 +173,14 @@ public class AI {
         if(curr.isTerm()){
             return util.getUtil(curr);
         }
-        else if(depth==5){
+        else if(depth==10){
             return Heuristic(curr);
         }
         int ret=Integer.MAX_VALUE;
         ArrayList<Board> moves=curr.getChildren();
+        depth++;
         for(Board b: moves){
             if(!visitedContains(visited,b)) {
-                depth++;
                 ret = Math.min(ret, ABH_Max(b, Alpha, Beta));
                 visited.add(b);
                 if (ret <= Alpha)

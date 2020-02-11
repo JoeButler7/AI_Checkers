@@ -7,6 +7,8 @@ public class Board implements State{
     private boolean turn;
     private int moveCount;
     private int utility;
+    private int ai_player;
+    private Move from;
 
     public Board(int size){
         this.board=new Piece[size][size];
@@ -52,12 +54,14 @@ public class Board implements State{
         update();
     }
 
-    public Board(Piece[][] board, ArrayList<Piece> black, ArrayList<Piece> white, boolean turn, int moveCount) {
+    public Board(Piece[][] board, ArrayList<Piece> black, ArrayList<Piece> white, boolean turn, int moveCount, Move from, int ai_player) {
         this.board = board;
         this.black = black;
         this.white = white;
         this.turn = turn;
         this.moveCount = moveCount;
+        this.from=from;
+        this.ai_player=ai_player;
     }
 
     public ArrayList<Board> getChildren(){
@@ -66,20 +70,38 @@ public class Board implements State{
         for(Move m: moves){
             ret.add(getBoardFromMove(m));
         }
+        int max_Caps=0;
+        for(Board b: ret){
+            if(b.getFrom().getCaps()>max_Caps)
+                max_Caps=b.getFrom().getCaps();
+        }
+        for(int i=0;i<ret.size();i++){
+            if(ret.get(i).getFrom().getCaps()<max_Caps){
+                ret.remove(i);
+            }
+        }
         return ret;
     }
     public ArrayList<Move> getMoves(){
         ArrayList<Move> ret=new ArrayList<Move>();
         if(turn) {
             for (Piece p : white) {
-                ret.addAll(getMovesFromPos(p));
                 ret.addAll(getCapFromPos(p, new ArrayList<Coord>()));
+                if(ai_player==1||ai_player==3){
+                    if(ret.isEmpty()){
+                        ret.addAll(getMovesFromPos(p));}}
+                else
+                    ret.addAll(getMovesFromPos(p));
             }
         }
         else {
             for (Piece p : black) {
-                ret.addAll(getMovesFromPos(p));
                 ret.addAll(getCapFromPos(p, new ArrayList<Coord>()));
+                if(ai_player==2||ai_player==3){
+                if(ret.isEmpty()){
+                    ret.addAll(getMovesFromPos(p));}}
+                else
+                    ret.addAll(getMovesFromPos(p));
             }
         }
 
@@ -293,7 +315,7 @@ public class Board implements State{
                     }
                 }
             }
-            ret= new Board(new Piece[board.length][board.length],btemp,wtemp,false,moveCount);
+            ret= new Board(new Piece[board.length][board.length],btemp,wtemp,false,moveCount,m,ai_player);
             ret.update();
         }
         else {
@@ -311,7 +333,7 @@ public class Board implements State{
                     }
                 }
             }
-            ret=new Board(new Piece[board.length][board.length],btemp,wtemp,true,moveCount+1);
+            ret=new Board(new Piece[board.length][board.length],btemp,wtemp,true,moveCount+1,m,ai_player);
             ret.update();
         }
         return ret;
@@ -394,6 +416,7 @@ public class Board implements State{
             }
             System.out.print("\n");
         }
+        System.out.println();
     }
     private boolean inCapList(Coord c, ArrayList<Coord> capList){
         for(Coord coord: capList){
@@ -455,5 +478,21 @@ public class Board implements State{
 
     public void setUtility(int utility) {
         this.utility = utility;
+    }
+
+    public Move getFrom() {
+        return from;
+    }
+
+    public void setFrom(Move from) {
+        this.from = from;
+    }
+
+    public int getAi_player() {
+        return ai_player;
+    }
+
+    public void setAi_player(int ai_player) {
+        this.ai_player = ai_player;
     }
 }

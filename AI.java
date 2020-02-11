@@ -1,4 +1,4 @@
-import java.awt.desktop.SystemSleepEvent;
+
 import java.util.ArrayList;
 
 public class AI {
@@ -191,7 +191,6 @@ public class AI {
         }
         return ret;
     }
-
     private int Heuristic(Board b){
         int ret=0;
         int opposition=0;
